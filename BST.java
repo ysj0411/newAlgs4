@@ -40,5 +40,51 @@ public class BST<Key extends Comparable<Key>, Value> {
 		 return x;
 		 
 	 }
+ public Key min(){
+		 return min(root).key;//返回根结点的键
+	 }
+	private Node min(Node x){
+		if(x.left==null) return x;//如果左子结点不存在，则说明当前数就是最小值了，所以返回当前键
+		return min(x.left);//否则递归查询
+	}
+	public Key max(){//与上面相反
+		return max(root).key;
+	}
+	private Node max(Node x){
+		if(x.right==null) return x;
+		return max(x.right);
+	}
+	public Key floor(Key key){//向上取整
+		Node x=floor(root,key);
+		if(x==null) return null;
+		return x.key;
+	}
+	private Node floor(Node x,Key key){
+		if(x==null) return null;//如果根结点不存在则返回null，因为下面是向上取整，只要root存在就返回不了null
+		int cmp=key.compareTo(x.key);//当前键与查找键比较
+		if(cmp==0) return x;//如果等于，则不用向上取整。直接输出
+		if(cmp<0) return floor(x.left,key);//如果小于，则查找左子结点数
+		Node t=floor(x.right,key);//定义结点t为递归的右结点查找
+		if(t!=null) return t;//如果右结点存在，则继续递归
+		else return x;//右子结点树不存在这样的键，则返回小于等于key的最大键就是父节点。
+		
+		
+	}
+	public Key ceiling(Key key){// 向下取整
+		Node x=floor(root,key);
+		if(x==null) return null;
+		return x.key;
+	}
+	private Node ceiling(Node x,Key key){
+		if(x==null) return null;//如果根结点不存在则返回null，因为下面是向下取整，只要root存在就返回不了null
+		int cmp=key.compareTo(x.key);//当前键与查找键比较
+		if(cmp==0) return x;//如果等于，则不用向下取整。直接输出
+		if(cmp>0) return floor(x.right,key);//如果大于，则查找右子结点数
+		Node t=floor(x.left,key);//定义结点t为递归的左结点查找
+		if(t!=null) return t;//如果左结点存在，则继续递归
+		else return x;//左子结点树不存在这样的键，则返回大于等于key的最大键就是父节点。
+		
+		
+	}
 	
 }
