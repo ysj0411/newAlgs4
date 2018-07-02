@@ -86,5 +86,34 @@ public class BST<Key extends Comparable<Key>, Value> {
 		
 		
 	}
+public void deleteMin(){
+		root=deleteMin(root);//创建根结点以便遍历，也许吧
+	}
+	private Node deleteMin(Node x){
+		if(x.left==null) return x.right;//如果查找到对应的键，也就是把左子树全部遍历完了，左结点为空了，就返回右结点，这样每次调用或操作时就直接访问右结点忽略可当前结点，Java就会自动回收，相当于完成了删除操作。
+	    x.left=deleteMin(x.left);//接着遍历左结点
+	    x.N=size(x.left)+size(x.right)+1;//计数器调整
+	    return x;//不知道为啥要返回自身,难道是为了平衡上面的Node，毕竟除了void其他都要返回语句
+	}
+	public void delete(Key key){
+		root=delete(root,key);
+		
+	}
+	private Node delete(Node x,Key key){
+		if(x==null) return null;
+		int cmp=key.compareTo(x.key);
+		if(cmp<0) return delete(x.left,key);//如果要删除的键小于当前的键，则遍历左子树
+	    if(cmp>0) return delete(x.right,key);//如果大于，则遍历右边的，直到相等
+	    else{
+	    	if(x.left==null) return x.right;//如果左边为空连接，则返回右链接，这样就会使当前键回收，因为一直用不上
+	    	if(x.right==null) return x.left;// 同理，返回左链接
+	    	Node t=x;//如果左右都有链接，则将指向即将被删除的结点的结点保存为t，以便接下来的操作。
+	        x=min(t.right);//找出右子树最小的键最为后继结点，只是就完成了身份的替换,t相当于一个备份只是用来操作。
+	        x.right=deleteMin(t.right);//相当于把后继结点删了吗，其实是直接返回了后继结点的右结点，这样就正好把后继结点的父节点和子结点相连，修正了父节点。
+	        x.left=t.left;
+	    }
+	    x.N=size(x.left)+size(x.right)+1;
+	    return x;
+	}
 	
 }
