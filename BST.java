@@ -115,5 +115,22 @@ public void deleteMin(){
 	    x.N=size(x.left)+size(x.right)+1;
 	    return x;
 	}
+public Iterable<Key> keys(){//范围查找,迭代，类似foreach语句遍历返回所有的键
+		return keys(min(),max());
+	}
+	public Iterable<Key> keys(Key lo,Key hi)//lo为查询的开头，hi为末尾，两个中间区域构成范围
+	{
+	   Queue<Key> queue=new Queue<Key>();//运用队列
+	   keys(root,queue,lo,hi);//从根结点开始遍历
+	   return queue;//最后返回队列，应该是一个个数。
+	}
+	private void keys(Node x,Queue<Key> queue,Key lo,Key hi){
+		if(x==null) return;//结束该方法，继续执行方法后的语句
+		int cmplo=lo.compareTo(x.key);// 结合下方的意思是用最小值与键比较，即找到最小值，但不小于lo设置为队列的开头,
+		int cmphi=hi.compareTo(x.key);//结合下方的意思是用最大值比较，即找到最大值，但不超过hi设置为队列的末尾
+	    if(cmplo<0) keys(x.left,queue,lo,hi);//比最小值大，找左子树
+	    if(cmplo<=0&&cmphi>=0) queue.enqueue(x.key);//要满足即大于最小值，小于最大值才选出相应的键
+	    if(cmphi>0) keys(x.right,queue,lo,hi);//比最大值小，找右子树
+	}
 	
 }
