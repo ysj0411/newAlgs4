@@ -1,0 +1,42 @@
+﻿import edu.princeton.cs.algs4.In;
+
+public class SymbolGraph {
+        private ST<String,Integer> st;//符号表
+        private String[] keys;//符号名
+        private Graph G;// 图
+        
+        public SymbolGraph(String stream,String sp){//获取数据流，和分隔符
+        	st= new ST<String,Integer>();
+        	In in= new In(stream);//读取数据
+        	while(in.hasNextLine()){//如果有下一行数据则循环
+        		String[] a=in.readLine().split(sp);//数据按分隔符分开，放入数组中
+        		
+        		for(int i=0;i<a.length;i++)//循环放入数据
+        			if(!st.contains(a[i]))//如果符号表中不存在这个数据
+        				
+        				st.put(a[i],st.size());//放入数据，建立索引，从0即当前符号表大小
+        		
+        	}
+        	keys= new String[st.size()];//建立大小为上方符号表大小的字符串数组，即反向索引
+        	
+        	for(String name:st.keys())//遍历符号中的值，也就那些数据
+        		keys[st.get(name)]=name;//新的符号中的索引与原符号表值相等，即值与索引交换，也可看做是顶点名的集合
+        	
+        	G=new Graph(st.size());//构造图，大小为符号表大小
+        	in =new In(stream);//读取数据
+        	while(in.hasNextLine())//下一行如果有数据就循环
+        	{
+        		String[] a=in.readLine().split(sp);//和上面一样
+        		int v=st.get(a[0]);// 获取当前数据对应的值，因为每次循环都会获取下一行的数据
+       		for(int i=1;i<a.length;i++)
+        			G.addEdge(v, st.get(a[i]));//把两顶点加入图中，也就是构成一条边，因为输入规则是把当前字符串，链接的所以字符串都先列出来，所以0作为顶点，其他做为邻接的顶点。如输入王二
+       		//'/'张三 李四 那么王二就为0索引，张三李四就是1，2索引
+        	}
+        }
+        public boolean contains(String s){return st.contains(s);}
+        public int index(String s)       {return st.get(s);}
+        public String name(int v)         {return keys[v];}
+        public Graph G()                  {return G;}
+        
+
+}
